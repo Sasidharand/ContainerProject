@@ -51,18 +51,4 @@ stages:
       inputs:
         command: buildAndPush
         repository: $(imageRepository)
-    - task: AzureRmWebAppDeployment@4
-      inputs:
-        ConnectionType: 'AzureRM'
-        appType: 'webApp'
-        WebAppName: 
-        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
-            dockerfile: $(dockerfilePath)
-            containerRegistry: $(dockerRegistryServiceConnection)
-            tags: |
-              $(tag)- stage: Build
-            
-
-
- 
   
