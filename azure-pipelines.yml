@@ -37,23 +37,32 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)- stage: Build
-          
-   - stage: Build        
-      displayName: Build and push stage
-      jobs:
-      - job: Build
-        displayName: Build
-        pool:
-          vmImage: $(vmImageName)
-        steps:
-        - task: Docker@2
-          displayName: Build and push an image to container registry
-          inputs:
-            command: buildAndPush
-            repository: $(imageRepository)
+
+- stage: Qa
+  displayName: Build and push stage
+  jobs:
+  - job: QA
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+    - task: AzureRmWebAppDeployment@4
+      inputs:
+        ConnectionType: 'AzureRM'
+        appType: 'webApp'
+        WebAppName: 
+        packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
             dockerfile: $(dockerfilePath)
             containerRegistry: $(dockerRegistryServiceConnection)
             tags: |
-              $(tag)
+              $(tag)- stage: Build
+            
 
+
+ 
   
